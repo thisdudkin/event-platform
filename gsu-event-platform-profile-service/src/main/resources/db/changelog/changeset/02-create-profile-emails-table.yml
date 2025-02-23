@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-profile-emails-table
+      author: Alexander Dudkin
+      changes:
+        - createTable:
+            tableName: profile_emails
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: profile_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - addForeignKeyConstraint:
+            baseTableName: profile_emails
+            baseColumnNames: profile_id
+            referencedTableName: profiles
+            referencedColumnNames: id
+            constraintName: fk_profile_emails_profiles
