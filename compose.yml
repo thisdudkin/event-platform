@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:17.0
+    container_name: postgres
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER:      postgres
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_DB:        postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/script/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test:     [ "CMD-SHELL", "pg_isready -d postgres -U postgres" ]
+      interval: 30s
+      timeout:  5s
+      retries:  5
+    networks:
+      - gsu-events
+    restart: unless-stopped
+
+networks:
+  gsu-events:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
