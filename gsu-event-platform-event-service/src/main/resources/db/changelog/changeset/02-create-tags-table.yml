@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-tags-table
+      author: Alexander Dudkin
+      changes:
+        - createTable:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+                    nullable: false

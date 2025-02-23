@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04-create-event-attachments-table
+      author: Alexander Dudkin
+      changes:
+        - createTable:
+            tableName: event_attachments
+            columns:
+              - column:
+                  name: event_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            constraintName: fk_event_attachments_event_id
+            referencedTableName: events
+            referencedColumnNames: id
+            baseTableName: event_attachments
+            baseColumnNames: event_id

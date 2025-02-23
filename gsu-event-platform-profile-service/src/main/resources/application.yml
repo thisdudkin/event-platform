@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name:       profile-service
+  datasource:
+    url:        jdbc:postgresql://localhost:5432/profile_repository
+    username:   postgres
+    password:   postgres

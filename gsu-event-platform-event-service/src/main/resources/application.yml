@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name:       event-service
+  datasource:
+    url:        jdbc:postgresql://localhost:5432/event_repository
+    username:   postgres
+    password:   postgres

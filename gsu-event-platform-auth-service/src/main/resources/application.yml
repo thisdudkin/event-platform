@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name:       auth-service
+  datasource:
+    url:        jdbc:postgresql://localhost:5432/user_repository
+    username:   postgres
+    password:   postgres
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:      ${GOOGLE_CLIENT_ID}
+            client-secret:  ${GOOGLE_CLIENT_SECRET}
+            redirect-uri:   ${GOOGLE_REDIRECT_URI}
+            scope:
+              - openid
+              - email
+              - profile
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration:
+    access:   50000     # 5 minutes
+    refresh:  600000    # 60 minutes

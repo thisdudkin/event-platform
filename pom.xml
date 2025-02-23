@@ -14,10 +14,14 @@
     <artifactId>gsu-event-platform</artifactId>
     <version>3.4.3</version>
     <name>${project.artifactId}</name>
+    <packaging>pom</packaging>
+
     <modules>
         <module>gsu-event-platform-auth-service</module>
+        <module>gsu-event-platform-profile-service</module>
+        <module>gsu-event-platform-event-service</module>
+        <module>gsu-event-platform-booking-service</module>
     </modules>
-    <packaging>pom</packaging>
 
     <properties>
         <!-- Versions can be modified later -->
