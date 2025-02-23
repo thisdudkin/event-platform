@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_repository
+    username: postgres
+    password: postgres
+
+jwt:
+  secret-key: 256-bit-secret-key
+  expiration:
+    access:   50000     # 5 minutes
+    refresh:  600000    # 60 minutes
