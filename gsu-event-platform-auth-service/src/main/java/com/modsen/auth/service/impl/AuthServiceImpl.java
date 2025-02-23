@@ -10,6 +10,7 @@ import com.modsen.auth.repository.UserRepository;
 import com.modsen.auth.security.provider.JwtTokenProvider;
 import com.modsen.auth.security.utils.JwtUtils;
 import com.modsen.auth.service.AuthService;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -40,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse authenticate(AuthenticationRequest request) {
         try {
             User user = userRepository.findByUsername(request.username())
-                    .orElseThrow();
+                    .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Bad credentials"));
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     request.username(),
                     request.password()

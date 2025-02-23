@@ -1,5 +1,7 @@
 package com.modsen.auth.security;
 
+import com.modsen.auth.security.exception.JwtAccessDeniedHandler;
+import com.modsen.auth.security.exception.JwtAuthenticationEntryPoint;
 import com.modsen.auth.security.filter.JwtTokenFilterConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +25,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenFilterConfigurer jwtTokenFilterConfigurer;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    public SecurityConfig(JwtTokenFilterConfigurer jwtTokenFilterConfigurer) {
+    public SecurityConfig(JwtAccessDeniedHandler jwtAccessDeniedHandler, JwtTokenFilterConfigurer jwtTokenFilterConfigurer, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtTokenFilterConfigurer = jwtTokenFilterConfigurer;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
@@ -40,7 +46,14 @@ public class SecurityConfig {
 
         // Entrypoints
         http.authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll());
+                .anyRequest().permitAll()
+        );
+
+        // Exception Handling
+        http.exceptionHandling(customizer -> customizer
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+        );
 
         http.with(jwtTokenFilterConfigurer, Customizer.withDefaults());
 
