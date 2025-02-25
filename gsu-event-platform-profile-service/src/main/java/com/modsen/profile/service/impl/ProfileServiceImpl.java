@@ -9,6 +9,7 @@ import com.modsen.profile.model.Profile;
 import com.modsen.profile.repository.ProfileRepository;
 import com.modsen.profile.service.ProfileService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import java.util.UUID;
  * @author Alexander Dudkin
  */
 @Service
+@Transactional
 public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileMapper profileMapper;
@@ -28,11 +30,13 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public void saveProfile(ProfileRequest request) {
+    public ProfileResponse saveProfile(ProfileRequest request) {
         // TODO: Aspect validation, if there already entity with same email/userId in the database.
         Profile profile = profileMapper.toProfile(request);
         // TODO: Retrieve userId from Authorization Header
-        profileRepository.save(profile.withUserId(UuidCreator.getTimeOrderedEpoch()));
+        profile = profileRepository.save(profile.withUserId(UuidCreator.getTimeOrderedEpoch()));
+
+        return profileMapper.toResponse(profile);
     }
 
     @Override
@@ -55,6 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ProfileResponse> findById(UUID id) {
         return profileRepository.findById(id)
                 .map(profileMapper::toResponse);

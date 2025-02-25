@@ -32,11 +32,9 @@ public class ProfileController implements ProfileApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> createProfile(@RequestBody ProfileRequest profileRequest) {
-        profileService.saveProfile(profileRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    public ResponseEntity<ProfileResponse> createProfile(@RequestBody ProfileRequest profileRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileService.saveProfile(profileRequest));
     }
-
 
     @Override
     @DeleteMapping("/{id}")
