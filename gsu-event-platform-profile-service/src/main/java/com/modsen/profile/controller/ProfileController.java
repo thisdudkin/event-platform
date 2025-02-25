@@ -6,6 +6,12 @@ import com.modsen.profile.dto.response.ProfileResponse;
 import com.modsen.profile.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,25 +31,28 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    public ResponseEntity<Void> createProfile(ProfileRequest profileRequest) {
-        profileService.saveProfile(profileRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    @PostMapping
+    public ResponseEntity<ProfileResponse> createProfile(@RequestBody ProfileRequest profileRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileService.saveProfile(profileRequest));
     }
 
-
     @Override
-    public ResponseEntity<Void> deleteProfile(UUID id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProfile(@PathVariable UUID id) {
         profileService.deleteProfile(id);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<ProfileResponse> updateProfile(UUID id, ProfileRequest profileRequest) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileResponse> updateProfile(@PathVariable UUID id,
+                                                         @RequestBody ProfileRequest profileRequest) {
         return ResponseEntity.ok(profileService.updateProfile(id, profileRequest));
     }
 
     @Override
-    public ResponseEntity<ProfileResponse> getById(UUID id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ProfileResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.of(profileService.findById(id));
     }
 

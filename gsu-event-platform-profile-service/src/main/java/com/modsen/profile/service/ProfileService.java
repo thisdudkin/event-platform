@@ -11,9 +11,10 @@ import java.util.UUID;
  * @author Alexander Dudkin
  */
 public interface ProfileService {
-    void saveProfile(ProfileRequest profileRequest);
 
     void deleteProfile(UUID id);
+
+    ProfileResponse saveProfile(ProfileRequest profileRequest);
 
     ProfileResponse updateProfile(UUID id, ProfileRequest profileRequest);
 

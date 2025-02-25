@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface ProfileApi {
     String URI = "/api/profiles";
 
-    ResponseEntity<Void> createProfile(ProfileRequest profileRequest);
+    ResponseEntity<ProfileResponse> createProfile(ProfileRequest profileRequest);
 
     ResponseEntity<Void> deleteProfile(UUID id);
 
