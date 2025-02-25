@@ -1,5 +1,6 @@
 package com.modsen.profile.service.impl;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import com.modsen.profile.dto.request.ProfileRequest;
 import com.modsen.profile.dto.response.ProfileResponse;
 import com.modsen.profile.exception.ProfileNotFoundException;
@@ -30,7 +31,8 @@ public class ProfileServiceImpl implements ProfileService {
     public void saveProfile(ProfileRequest request) {
         // TODO: Aspect validation, if there already entity with same email/userId in the database.
         Profile profile = profileMapper.toProfile(request);
-        profileRepository.save(profile);
+        // TODO: Retrieve userId from Authorization Header
+        profileRepository.save(profile.withUserId(UuidCreator.getTimeOrderedEpoch()));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found with ID: " + id));
 
-        profile = profileRepository.update(profile.id(), profileMapper.toProfile(request));
+        profile = profileRepository.update(profile.id(), profileMapper.toProfile(request).withUserId(profile.userId()));
 
         return profileMapper.toResponse(profile);
     }

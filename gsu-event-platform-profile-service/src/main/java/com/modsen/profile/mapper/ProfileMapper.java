@@ -5,10 +5,12 @@ import com.modsen.profile.dto.response.ProfileResponse;
 import com.modsen.profile.model.Profile;
 import org.mapstruct.Mapper;
 
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
 /**
  * @author Alexander Dudkin
  */
-@Mapper
+@Mapper(componentModel = SPRING)
 public interface ProfileMapper {
     Profile toProfile(ProfileRequest profileRequest);
     ProfileResponse toResponse(Profile profile);
