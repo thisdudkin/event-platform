@@ -17,6 +17,7 @@
     <modules>
         <module>gsu-event-platform-auth-service</module>
         <module>gsu-event-platform-profile-service</module>
+        <module>gsu-event-platform-event-service</module>
     </modules>
     <packaging>pom</packaging>
 

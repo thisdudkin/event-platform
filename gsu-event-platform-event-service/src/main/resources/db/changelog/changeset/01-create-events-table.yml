@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-events-table
+      author: Alexander Dudkin
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: organizer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacity
+                  type: INT
+              - column:
+                  name: created_time
+                  type: TIMESTAMP WITHOUT TIMEZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_time
+                  type: TIMESTAMP WITHOUT TIMEZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_info
+                  type: VARCHAR(255)
+              - column:
+                  name: is_public
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: eligibility_criteria
+                  type: TEXT
+              - column:
+                  name: budget
+                  type: DECIMAL(15,2)
+              - column:
+                  name: image_url
+                  type: VARCHAR(512)
+              - column:
+                  name: registration_deadline
+                  type: TIMESTAMP
