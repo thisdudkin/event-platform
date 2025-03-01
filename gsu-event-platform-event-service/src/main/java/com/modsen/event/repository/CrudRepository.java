@@ -13,7 +13,7 @@ public interface CrudRepository<T, ID> {
 
     boolean existsById(ID id);
 
-    Iterable<T> findAll(int page, int size);
+    Iterable<T> findAll(UUID lastFetchedId, int size);
 
     Optional<T> findById(ID id);
 

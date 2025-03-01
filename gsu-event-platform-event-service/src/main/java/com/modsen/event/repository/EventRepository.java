@@ -12,18 +12,18 @@ import java.util.UUID;
  */
 public interface EventRepository extends CrudRepository<Event, UUID> {
 
-    Iterable<Event> findByStatus(EventStatus status, int page, int size);
+    Iterable<Event> findByStatus(EventStatus status, UUID lastFetchedId, int size);
 
-    Iterable<Event> findByOrganizer(UUID organizerId, int page, int size);
+    Iterable<Event> findByOrganizer(UUID organizerId, UUID lastFetchedId, int size);
 
-    Iterable<Event> findByCreator(UUID creatorId, int page, int size);
+    Iterable<Event> findByCreator(UUID creatorId, UUID lastFetchedId, int size);
 
-    Iterable<Event> findBetweenDates(LocalDateTime start, LocalDateTime end, int page, int size);
+    Iterable<Event> findBetweenDates(LocalDateTime start, LocalDateTime end, UUID lastFetchedId, int size);
 
-    Iterable<Event> findByTags(Collection<String> tags, int page, int size);
+    Iterable<Event> findByTags(Collection<String> tags, UUID lastFetchedId, int size);
 
-    Iterable<Event> findByRegistrationDeadlineApproaching(LocalDateTime deadline, int page, int size);
+    Iterable<Event> findByRegistrationDeadlineApproaching(LocalDateTime deadline, UUID lastFetchedId, int size);
 
-    Iterable<Event> findPublicEvents(int page, int size);
+    Iterable<Event> findPublicEvents(UUID lastFetchedId, int size);
 
 }
