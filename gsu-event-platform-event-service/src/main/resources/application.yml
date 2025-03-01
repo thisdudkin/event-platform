@@ -3,8 +3,8 @@ server:
 
 spring:
   application:
-    name:       profile-service
+    name:       event-service
   datasource:
-    url:        jdbc:postgresql://localhost:5432/profile_repository
+    url:        jdbc:postgresql://localhost:5432/event_repository
     username:   postgres
     password:   postgres

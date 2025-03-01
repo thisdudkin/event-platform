@@ -3,11 +3,11 @@ server:
 
 spring:
   application:
-    name: auth-service
+    name:       auth-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_repository
-    username: postgres
-    password: postgres
+    url:        jdbc:postgresql://localhost:5432/user_repository
+    username:   postgres
+    password:   postgres
   security:
     oauth2:
       client:
