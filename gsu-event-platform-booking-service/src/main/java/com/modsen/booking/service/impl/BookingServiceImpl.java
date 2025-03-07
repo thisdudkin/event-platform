@@ -1,20 +1,30 @@
 package com.modsen.booking.service.impl;
 
+import com.github.f4b6a3.uuid.UuidCreator;
+import com.modsen.booking.dto.event.BookingEvent;
 import com.modsen.booking.dto.request.BookingRequest;
 import com.modsen.booking.dto.response.BookingResponse;
 import com.modsen.booking.mapper.BookingMapper;
 import com.modsen.booking.model.Booking;
+import com.modsen.booking.model.OutboxEvent;
 import com.modsen.booking.model.Page;
 import com.modsen.booking.repository.BookingRepository;
+import com.modsen.booking.repository.OutboxRepository;
+import com.modsen.booking.serializer.Serializer;
 import com.modsen.booking.service.BookingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.StreamSupport;
 
 /**
@@ -22,12 +32,19 @@ import java.util.stream.StreamSupport;
  */
 @Service
 public class BookingServiceImpl implements BookingService {
+    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     private final BookingMapper bookingMapper;
+    private final OutboxRepository outboxRepository;
     private final BookingRepository bookingRepository;
+    private final Serializer<BookingEvent> eventSerializer;
+    private final KafkaTemplate<String, BookingEvent> kafkaTemplate;
 
-    public BookingServiceImpl(BookingMapper bookingMapper, BookingRepository bookingRepository) {
+    public BookingServiceImpl(BookingMapper bookingMapper, OutboxRepository outboxRepository, BookingRepository bookingRepository, Serializer<BookingEvent> eventSerializer, KafkaTemplate<String, BookingEvent> kafkaTemplate) {
         this.bookingMapper = bookingMapper;
+        this.kafkaTemplate = kafkaTemplate;
+        this.eventSerializer = eventSerializer;
+        this.outboxRepository = outboxRepository;
         this.bookingRepository = bookingRepository;
     }
 
@@ -36,6 +53,30 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse createBooking(BookingRequest bookingRequest) {
         Booking booking = bookingMapper.toBooking(bookingRequest);
         Booking resultBooking = bookingRepository.save(booking);
+
+        BookingEvent bookingEvent = new BookingEvent(
+                resultBooking.id(),
+                resultBooking.userId(),
+                resultBooking.eventId(),
+                resultBooking.amount()
+        );
+
+        kafkaTemplate.sendDefault(
+                bookingEvent
+        ).thenAccept(result -> {
+                    log.debug("Event sent to Kafka. Offset: {}", result.getRecordMetadata().offset());
+                }
+        ).exceptionally(ex -> {
+            log.error("Failed to send event to Kafka: {}", ex.getMessage());
+            outboxRepository.save(new OutboxEvent(
+                    UuidCreator.getTimeOrderedEpoch().toString(),
+                    eventSerializer.serializeEvent(bookingEvent),
+                    LocalDateTime.now(),
+                    false
+            ));
+            return null;
+        });
+
         return bookingMapper.toResponse(resultBooking);
     }
 

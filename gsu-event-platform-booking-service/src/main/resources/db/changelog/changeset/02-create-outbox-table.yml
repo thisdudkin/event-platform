@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-outbox-table
+      author: Alexander Dudkin
+      changes:
+        - createTable:
+            tableName: outbox
+            columns:
+              - column:
+                  name: id
+                  type: VARCHAR(36)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: event_data
+                  type: BYTEA
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: is_sent
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
